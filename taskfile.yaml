@@ -1,0 +1,13 @@
+version: "3"
+
+dotenv: [".env"]
+
+tasks:
+  # Lint Go code
+  lint:
+    cmds:
+      - golangci-lint run
+
+
+
+
