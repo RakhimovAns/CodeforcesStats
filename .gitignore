@@ -2,3 +2,4 @@
 configs/local.env
 ./TODO.txt
 ./pkg/utils/user/HTML.txt
+.idea/vcs.xml
