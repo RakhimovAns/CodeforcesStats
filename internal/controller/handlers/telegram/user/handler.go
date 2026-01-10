@@ -1,10 +1,11 @@
-package telegramhandler
+package user
 
 import (
 	"fmt"
 	"log/slog"
 	"strings"
 
+	telegramhandler "github.com/RakhimovAns/CodeforcesStats/internal/controller/handlers/telegram/deps"
 	"github.com/RakhimovAns/CodeforcesStats/pkg/telegram"
 	utils "github.com/RakhimovAns/CodeforcesStats/pkg/utils/user"
 	slerr "github.com/RakhimovAns/logger/pkg/err"
@@ -12,7 +13,19 @@ import (
 	"github.com/mymmrac/telego/telegohandler"
 )
 
-func (h *Handler) handleUser(ctx *telegohandler.Context, update telego.Update) error {
+type Handler struct {
+	telegram telegramhandler.Telegram
+	bot      telegramhandler.Bot
+}
+
+func New(tg telegramhandler.Telegram, bot telegramhandler.Bot) *Handler {
+	return &Handler{
+		telegram: tg,
+		bot:      bot,
+	}
+}
+
+func (h *Handler) HandleUser(ctx *telegohandler.Context, update telego.Update) error {
 	if update.Message == nil {
 		return nil
 	}

@@ -1,13 +1,26 @@
-package telegramhandler
+package start
 
 import (
 	"context"
 
+	telegramhandler "github.com/RakhimovAns/CodeforcesStats/internal/controller/handlers/telegram/deps"
 	"github.com/mymmrac/telego"
 	"github.com/mymmrac/telego/telegohandler"
 )
 
-func (h *Handler) handleStart(ctx *telegohandler.Context, update telego.Update) error {
+type Handler struct {
+	telegram telegramhandler.Telegram
+	bot      telegramhandler.Bot
+}
+
+func New(tg telegramhandler.Telegram, bot telegramhandler.Bot) *Handler {
+	return &Handler{
+		telegram: tg,
+		bot:      bot,
+	}
+}
+
+func (h *Handler) HandleStart(ctx *telegohandler.Context, update telego.Update) error {
 	if update.Message == nil {
 		return nil
 	}
