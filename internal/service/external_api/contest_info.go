@@ -14,11 +14,10 @@ import (
 	"github.com/pkg/errors"
 )
 
-func (s *Service) FetchUserInfo(ctx context.Context, username string) ([]model.User, error) {
-	userLink := fmt.Sprintf("https://codeforces.com/api/user.info?handles=%s", username)
-	slog.Info("fetching user info", "url", userLink)
-
-	statusCode, body, err := utils.Request(ctx, userLink)
+func (s *Service) FetchContestInfo(ctx context.Context) ([]model.Contest, error) {
+	link := fmt.Sprintf("https://codeforces.com/api/contest.list?gym=false")
+	slog.Info("fetching contest info", "url", link)
+	statusCode, body, err := utils.Request(ctx, link)
 	if err != nil {
 		return nil, slerr.WithSource(err)
 	}
@@ -30,11 +29,9 @@ func (s *Service) FetchUserInfo(ctx context.Context, username string) ([]model.U
 	slog.Debug("response body", "body", string(body))
 
 	var rawStruct struct {
-		Status string       `json:"status"`
-		Result []model.User `json:"result"`
+		Status string          `json:"status"`
+		Result []model.Contest `json:"result"`
 	}
-
-	slog.Info("parsing user info")
 
 	if err := json.Unmarshal(body, &rawStruct); err != nil {
 		slog.Error("JSON parsing failed", "error", err, "body_preview", string(body[:min(100, len(body))]))
@@ -45,6 +42,6 @@ func (s *Service) FetchUserInfo(ctx context.Context, username string) ([]model.U
 		return nil, fmt.Errorf("API returned error status: %s", rawStruct.Status)
 	}
 
-	slog.Info("fetched user info", "users_count", len(rawStruct.Result))
+	slog.Info("fetched contest info", "contests_count", len(rawStruct.Result))
 	return rawStruct.Result, nil
 }
